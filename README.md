@@ -15,6 +15,7 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/xeyossr/terminalwrap?style=for-the-badge)
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/xeyossr/terminalwrap?style=for-the-badge)
+![AUR version](https://img.shields.io/aur/version/terminalwrap?style=for-the-badge)
 
 </div>
 
@@ -23,7 +24,6 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
   - bash
   - zsh
   - fish
-  - csh
 
 - Shows you motivational messages according to the command you use most. Show me your most used command and I'll tell you who you are 😀
 - Yo, what more are you waiting for? lol
@@ -106,10 +106,9 @@ Usage: terminalwrap [OPTION]
 
 Options:
   --help, -h       Show this help message.
-  --fish           Force using Fish
-  --zsh            Force using ZSH
-  --csh            Force using CSH
   --bash           Force using BASH
+  --zsh            Force using ZSH
+  --fish           Force using Fish
   (default)        Detect the shell from the environment.
 ```
 
