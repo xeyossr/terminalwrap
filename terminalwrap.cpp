@@ -38,6 +38,9 @@ std::string getHistoryFile(const std::string& shell) {
     } else if (shell == "bash") {
         std::string path = getenv("HOME") + std::string("/.bash_history");
         if (fileExists(path)) return path;
+    } else if (shell == "csh") {
+    	std::string path = getenv("HOME") + std::string("/.history");
+    	if (fileExists(path)) return path;
     }
     std::cerr << RED << "The specified terminal history file was not found!" << RESET << "\n";
     return "";
@@ -92,6 +95,8 @@ void displayResults(const std::string& title, const std::map<std::string, int>& 
             topCall = sortedData[i].second;
             topItem = sortedData[i].first;
         }
+
+        
         std::cout << sortedData[i].second << spacer(sortedData[i].second) << "| " << sortedData[i].first << "\n";
     }
 
@@ -208,8 +213,6 @@ void displayResults(const std::string& title, const std::map<std::string, int>& 
         std::cout << YELLOW << "Your top tool is \'" << topItem << "\'. Keep rocking your terminal!" << RESET << "\n";
     }
 
-
-// Preprocess the shell history file to extract commands
 std::vector<std::string> preprocessHistory(const std::string& filePath) {
     std::vector<std::string> commands;
     std::ifstream file(filePath);
@@ -219,8 +222,9 @@ std::vector<std::string> preprocessHistory(const std::string& filePath) {
     }
 
     std::string line;
+
+    // Fish history file: extract commands using regex
     if (filePath.find("fish_history") != std::string::npos) {
-      // Fish history file: extract commands using regex
         std::regex cmdRegex("- cmd: (.+)");
         while (std::getline(file, line)) {
             std::smatch match;
@@ -228,24 +232,41 @@ std::vector<std::string> preprocessHistory(const std::string& filePath) {
                 commands.push_back(match[1]);
             }
         }
-    } else if (filePath.find("zsh_history") != std::string::npos) {
-	  // Zsh history file: extract commands after semicolon
+    }
+    // Zsh history file: extract commands after semicolon
+    else if (filePath.find("zsh_history") != std::string::npos) {
         while (std::getline(file, line)) {
             size_t semicolonPos = line.find(';');
             if (semicolonPos != std::string::npos) {
-                std::string command = line.substr(semicolonPos + 1); // Get Commamd
+                std::string command = line.substr(semicolonPos + 1); // Get Command
                 commands.push_back(command);
             }
         }
-    } else {
+    }
+
+    // Csh history file: handle command lines selectively
+    else if (filePath.find(".history") != std::string::npos) {
+        bool isCommandLine = false;  // A flag to track if the line contains a command
         while (std::getline(file, line)) {
-            commands.push_back(line); // For other shell history files, just read lines
+            if (line.find("#+") == 0) {
+                isCommandLine = !isCommandLine; // Toggle the flag to indicate if we are on a command line
+            } else if (isCommandLine) {
+                commands.push_back(line); // If it's a command line, store it
+                isCommandLine = false; // Reset the flag after a command line is found
+            }
         }
     }
+
+    // For other shell history files, just read lines
+    else {
+        while (std::getline(file, line)) {
+            commands.push_back(line);
+        }
+    }
+
     file.close();
     return commands;
 }
-
 
 // Count the frequency of commands in the history
 std::map<std::string, int> countCommands(const std::vector<std::string>& commands) {
@@ -269,7 +290,7 @@ std::string check_and_return_history_file(const std::string& shell_type) {
         if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".local" / "share" / "fish" / "fish_history")) {
             history_file = std::string(getenv("HOME")) + "/.local/share/fish/fish_history";
         } else {
-            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `cliwrap -h` to find a compatible one?" << RESET << "\n";
+            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `terminalwrap -h` to find a compatible one?" << RESET << "\n";
             return "";
         }
     }
@@ -279,16 +300,24 @@ std::string check_and_return_history_file(const std::string& shell_type) {
         } else if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".zsh_history")) {
             history_file = std::string(getenv("HOME")) + "/.zsh_history";
         } else {
-            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `cliwrap -h` to find a compatible one?" << RESET << "\n";
+            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `terminalwrap -h` to find a compatible one?" << RESET << "\n";
             return "";
         }
     }
 
+	else if (shell_type == "csh") {
+		if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".history")) {
+			history_file = std::string(getenv("HOME")) + "/.history";
+		} else {
+			std::cerr << RED << "The specified terminal history file was not found! Why don't run `terminalwrap -h` to find a compatible one?" << RESET << "\n";
+		}
+	}
+	
     else if (shell_type == "bash") {
         if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".bash_history")) {
             history_file = std::string(getenv("HOME")) + "/.bash_history";
         } else {
-            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `cliwrap -h` to find a compatible one?" << RESET << "\n";
+            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `terminalwrap -h` to find a compatible one?" << RESET << "\n";
             return "";
         }
     } else {
@@ -304,9 +333,10 @@ void showHelpMessage() {
     std::cout << "Usage: terminalwrap [OPTION]\n\n"
               << "Options:\n"
               << "  --help, -h       Show this help message.\n"
-              << "  --bash           Force using BASH\n"
-              << "  --zsh            Force using ZSH\n"
+              << "  --bash           Force using Bash\n"
+              << "  --zsh            Force using Zsh\n"
               << "  --fish           Force using Fish\n"
+              << "  --csh            Force using Csh\n"
               << "  (default)        Detect the shell from the environment.\n"
               << "\n";
 }
@@ -325,6 +355,8 @@ int main(int argc, char* argv[]) {
             shell = "bash";
         } else if (arg == "--fish") {
             shell = "fish";
+        } else if (arg == "--csh") {
+			shell = "csh";
         } else {
             std::cerr << "Unknown option: " << arg << "\n"
                       << "Use --help or -h to see the available options.\n";

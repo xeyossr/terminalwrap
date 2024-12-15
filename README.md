@@ -24,6 +24,7 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
   - bash
   - zsh
   - fish
+  - csh
 
 - Shows you motivational messages according to the command you use most. Show me your most used command and I'll tell you who you are 😀
 - Yo, what more are you waiting for? lol
@@ -106,9 +107,10 @@ Usage: terminalwrap [OPTION]
 
 Options:
   --help, -h       Show this help message.
-  --bash           Force using BASH
-  --zsh            Force using ZSH
+  --bash           Force using Bash
+  --zsh            Force using Zsh
   --fish           Force using Fish
+  --csh            Force using Csh
   (default)        Detect the shell from the environment.
 ```
 
