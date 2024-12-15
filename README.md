@@ -10,13 +10,11 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
 
 ![License](https://img.shields.io/github/license/xeyossr/terminalwrap?style=for-the-badge)
 ![Commits](https://img.shields.io/github/commit-activity/m/xeyossr/terminalwrap?style=for-the-badge)
-![AUR](https://img.shields.io/aur/version/terminalwrap?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/xeyossr/terminalwrap?style=for-the-badge)
 ![GitHub issues](https://img.shields.io/github/issues/xeyossr/terminalwrap?style=for-the-badge)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/xeyossr/terminalwrap?style=for-the-badge)
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/xeyossr/terminalwrap?style=for-the-badge)
-
 
 </div>
 
