@@ -34,7 +34,7 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
 ---
 ### Installation 
 
-There are 2 ways to install TerminalWrap:
+There are 2 ways to install **TerminalWrap**:
 1. Compile it on your own system (don't worry, this is much easier than you think)
 2. Download the compiled version (not recommended)
 
