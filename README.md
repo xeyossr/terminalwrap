@@ -54,39 +54,36 @@ You are expected to install the dependencies required to build TerminalWrap:
 
 ```bash
 # Debian/Ubuntu
-$ sudo apt install g++ libstdc++-dev
+$ sudo apt install g++ libstdc++-dev cmake
 
 # RHEL/CentOs/Fedora
-$ sudo dnf install gcc-c++ libstdc++-devel
+$ sudo dnf install gcc-c++ libstdc++-devel cmake
 
 # Arch
-$ sudo pacman -S gcc
+$ sudo pacman -S gcc cmake
 ```
 
 3. Compile the source code:
 
 ```bash
-$ g++ -std=c++17 -o dist/terminalwrap terminalwrap.cpp
+$ mkdir build
+$ cd build
+$ cmake ..
+$ cmake --build .
+$ sudo cmake --install .
 ```
 
-If you want the tool to run faster, you can also compile it with the following flags (because if your history file is too big, this may cause the tool to run slowly; recommended):
-
-```bash
-$ g++ -O3 -march=native -flto -funroll-loops -ftree-vectorize -std=c++17 -o dist/terminalwrap terminalwrap.cpp
-```
-
-4. Move the compiled file to PATH
-
-To use TerminalWrap you need to add the compiled file to PATH (`/usr/bin/` on Linux systems):
-
-```bash
-$ sudo cp dist/terminalwrap /usr/bin/terminalwrap
-```
-
-5. Now you can run TerminalWrap with a single command!
+4. Now you can run TerminalWrap with a single command!
 ```bash
 $ terminalwrap
 ```
+
+or just run the `compile.sh`:
+```bash
+$ ./compile.sh
+```
+
+and it will be automatically compiled
 
 ### Installation on Arch-based distros
 You can easily install TerminalWrap via [AUR](https://aur.archlinux.org/packages/terminalwrap) for Arch Linux-based systems.

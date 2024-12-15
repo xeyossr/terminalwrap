@@ -56,7 +56,7 @@ void banner() {
     std::cout << CYAN << banner << "\n";
 }
 
-std::string spacer(const auto element) {
+std::string spacer(const int element) {
     int elementLength = std::to_string(std::abs(element)).length();
     int howMuchSpacesNeeded = 12 - elementLength;
     std::string spaces;
