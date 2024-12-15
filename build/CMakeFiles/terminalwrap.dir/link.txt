@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -march=native -flto -funroll-loops -ftree-vectorize -Wl,--dependency-file=CMakeFiles/terminalwrap.dir/link.d CMakeFiles/terminalwrap.dir/terminalwrap.cpp.o -o dist/terminalwrap
