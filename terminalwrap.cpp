@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <regex>
 #include <fstream>
+#include <ctime>
 
 // Colors for the output
 const std::string CYAN = "\033[0;36m";
@@ -20,10 +21,12 @@ const std::string RESET = "\033[0m";
 
 using Str = std::string;
 
+// Function to check if a file exists
 bool fileExists(const std::string& path) {
     return std::filesystem::exists(path);
 }
 
+// Returns the history file based on the shell type (fish, zsh, bash)
 std::string getHistoryFile(const std::string& shell) {
     if (shell == "fish") {
         std::string path = getenv("HOME") + std::string("/.local/share/fish/fish_history");
@@ -31,9 +34,6 @@ std::string getHistoryFile(const std::string& shell) {
     } else if (shell == "zsh") {
         std::string zdotdir = getenv("ZDOTDIR") ? getenv("ZDOTDIR") : getenv("HOME");
         std::string path = zdotdir + "/.zsh_history";
-        if (fileExists(path)) return path;
-    } else if (shell == "csh") {
-        std::string path = getenv("HOME") + std::string("/.history");
         if (fileExists(path)) return path;
     } else if (shell == "bash") {
         std::string path = getenv("HOME") + std::string("/.bash_history");
@@ -43,6 +43,7 @@ std::string getHistoryFile(const std::string& shell) {
     return "";
 }
 
+// Prints a banner to the terminal
 void banner() {
     Str banner = R"( 
  _____                   _             _  __        __               
@@ -53,9 +54,10 @@ void banner() {
                                                               |_|        
 )";
 
-    std::cout << CYAN << banner << "\n";
+    std::cout << CYAN << banner << "\n"; // Output banner in cyan
 }
 
+// Returns a string with spaces for formatting command output
 std::string spacer(const int element) {
     int elementLength = std::to_string(std::abs(element)).length();
     int howMuchSpacesNeeded = 12 - elementLength;
@@ -67,21 +69,24 @@ std::string spacer(const int element) {
     return spaces;
 }
 
-
+// Displays the command usage results sorted by frequency
 void displayResults(const std::string& title, const std::map<std::string, int>& data) {
     std::cout << MAGENTA << title << RESET << "\n";
     std::cout << YELLOW << "---------------------------------" << RESET << "\n";
     std::cout << CYAN << "Usage Count | Command" << RESET << "\n";
     std::cout << YELLOW << "---------------------------------" << RESET << "\n";
-        
+
+    // Sorting commands by usage frequency
     std::vector<std::pair<std::string, int>> sortedData(data.begin(), data.end());
     std::sort(sortedData.begin(), sortedData.end(), [](const auto& a, const auto& b) {
         return b.second < a.second;
     });
 
+	// Determine the most used command
     int topCall{sortedData[0].second};
     Str topItem{sortedData[0].first};
-    
+
+    // Display the top 10 commands
     for (size_t i = 0; i < std::min<size_t>(10, sortedData.size()); ++i) {
         if (sortedData[i].second > topCall) {
             topCall = sortedData[i].second;
@@ -92,7 +97,7 @@ void displayResults(const std::string& title, const std::map<std::string, int>& 
 
     std::cout << YELLOW << "---------------------------------" << RESET << "\n";
 
-    // Motivation time
+    // Display motivational comments based on the most used command
     if (topItem == "ls")
         std::cout << YELLOW << "Look at you, flexing that directory like a pro!" << RESET << "\n";
     else if (topItem == "cd")
@@ -204,16 +209,18 @@ void displayResults(const std::string& title, const std::map<std::string, int>& 
     }
 
 
+// Preprocess the shell history file to extract commands
 std::vector<std::string> preprocessHistory(const std::string& filePath) {
     std::vector<std::string> commands;
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        std::cerr << RED << "Error: Unable to open history file." << RESET << "\n";
+        std::cerr << "Error: Unable to open history file.\n";
         return commands;
     }
 
     std::string line;
     if (filePath.find("fish_history") != std::string::npos) {
+      // Fish history file: extract commands using regex
         std::regex cmdRegex("- cmd: (.+)");
         while (std::getline(file, line)) {
             std::smatch match;
@@ -221,29 +228,40 @@ std::vector<std::string> preprocessHistory(const std::string& filePath) {
                 commands.push_back(match[1]);
             }
         }
+    } else if (filePath.find("zsh_history") != std::string::npos) {
+	  // Zsh history file: extract commands after semicolon
+        while (std::getline(file, line)) {
+            size_t semicolonPos = line.find(';');
+            if (semicolonPos != std::string::npos) {
+                std::string command = line.substr(semicolonPos + 1); // Get Commamd
+                commands.push_back(command);
+            }
+        }
     } else {
         while (std::getline(file, line)) {
-            commands.push_back(line);
+            commands.push_back(line); // For other shell history files, just read lines
         }
     }
     file.close();
     return commands;
 }
 
+
+// Count the frequency of commands in the history
 std::map<std::string, int> countCommands(const std::vector<std::string>& commands) {
     std::map<std::string, int> commandCount;
     for (const auto& cmd : commands) {
         std::istringstream iss(cmd);
         std::string tool;
-        iss >> tool;
+        iss >> tool; // Get the command tool (e.g., 'ls', 'cd', etc.)
         if (!tool.empty()) {
-            commandCount[tool]++;
+            commandCount[tool]++; // Increment the count for this tool
         }
     }
     return commandCount;
 }
 
-
+// Checks and returns the correct history file based on the shell type
 std::string check_and_return_history_file(const std::string& shell_type) {
     std::string history_file = "";
 
@@ -265,14 +283,7 @@ std::string check_and_return_history_file(const std::string& shell_type) {
             return "";
         }
     }
-    else if (shell_type == "csh") {
-        if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".history")) {
-            history_file = std::string(getenv("HOME")) + "/.history";
-        } else {
-            std::cerr << RED << "The specified terminal history file was not found! Why don't you run `cliwrap -h` to find a compatible one?" << RESET << "\n";
-            return "";
-        }
-    }
+
     else if (shell_type == "bash") {
         if (std::filesystem::exists(std::filesystem::path(getenv("HOME")) / ".bash_history")) {
             history_file = std::string(getenv("HOME")) + "/.bash_history";
@@ -288,14 +299,14 @@ std::string check_and_return_history_file(const std::string& shell_type) {
     return history_file;
 }
 
+// Help message, args, etc.
 void showHelpMessage() {
     std::cout << "Usage: terminalwrap [OPTION]\n\n"
               << "Options:\n"
               << "  --help, -h       Show this help message.\n"
-              << "  --fish           Force using Fish\n"
-              << "  --zsh            Force using ZSH\n"
-              << "  --csh            Force using CSH\n"
               << "  --bash           Force using BASH\n"
+              << "  --zsh            Force using ZSH\n"
+              << "  --fish           Force using Fish\n"
               << "  (default)        Detect the shell from the environment.\n"
               << "\n";
 }
@@ -312,8 +323,6 @@ int main(int argc, char* argv[]) {
             shell = "zsh";
         } else if (arg == "--bash") {
             shell = "bash";
-        } else if (arg == "--csh") {
-            shell = "csh";
         } else if (arg == "--fish") {
             shell = "fish";
         } else {

@@ -1,0 +1,7 @@
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/terminalwrap.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/edit_cache.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/rebuild_cache.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/list_install_components.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/install.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/install/local.dir
+/home/kamisaki/Documents/terminalwrap/build/CMakeFiles/install/strip.dir
