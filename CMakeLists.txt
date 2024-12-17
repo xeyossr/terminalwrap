@@ -6,4 +6,3 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -flto -funroll-loops -
 set(SOURCE terminalwrap.cpp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 add_executable(terminalwrap ${SOURCE})
-install(TARGETS terminalwrap DESTINATION /usr/bin)
