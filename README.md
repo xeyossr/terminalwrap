@@ -8,6 +8,8 @@ Terminal wrap tool written in <code>👑 C++ 👑</code>
 </h3>
 <br>
 
+![preview](assets/preview.png)
+
 ![License](https://img.shields.io/github/license/xeyossr/terminalwrap?style=for-the-badge)
 ![Commits](https://img.shields.io/github/commit-activity/m/xeyossr/terminalwrap?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/xeyossr/terminalwrap?style=for-the-badge)
@@ -78,13 +80,6 @@ $ sudo cmake --install .
 ```bash
 $ terminalwrap
 ```
-
-or just run the `compile.sh`:
-```bash
-$ ./compile.sh
-```
-
-and it will be automatically compiled
 
 ### Installation on Arch-based distros
 You can easily install TerminalWrap via [AUR](https://aur.archlinux.org/packages/terminalwrap) for Arch Linux-based systems.
