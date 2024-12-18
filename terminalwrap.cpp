@@ -10,6 +10,7 @@
 #include <regex>
 #include <fstream>
 #include <ctime>
+#include <type_traits>
 
 // Colors for the output
 const std::string CYAN = "\033[0;36m";
@@ -61,9 +62,9 @@ void banner() {
 }
 
 // Returns a string with spaces for formatting command output
-std::string spacer(const int element) {
+std::string spacer(const int element, const int aInteger) {
     int elementLength = std::to_string(std::abs(element)).length();
-    int howMuchSpacesNeeded = 12 - elementLength;
+    int howMuchSpacesNeeded = aInteger - elementLength;
     std::string spaces;
     for (int i=0; i<howMuchSpacesNeeded; i++) {
         spaces += " ";
@@ -72,35 +73,64 @@ std::string spacer(const int element) {
     return spaces;
 }
 
+std::string centerer(const std::string& element, const int size) {
+    int elementLength = element.length();
+    int howMuchSpacesNeeded = (size - elementLength) / 2;
+    std::string spaces;
+    for (int i=0; i<howMuchSpacesNeeded; i++) {
+        spaces += " ";
+    }
+
+    return spaces + element + spaces;
+}
+
 // Displays the command usage results sorted by frequency
-void displayResults(const std::string& title, const std::map<std::string, int>& data) {
-    std::cout << MAGENTA << title << RESET << "\n";
-    std::cout << YELLOW << "---------------------------------" << RESET << "\n";
-    std::cout << CYAN << "Usage Count | Command" << RESET << "\n";
-    std::cout << YELLOW << "---------------------------------" << RESET << "\n";
+void displayResults(const std::map<std::string, int>& commandData, const std::map<std::string, int>& invocationData) {
+    std::cout << MAGENTA << "   " << "Top Commands" << "                       " << "Top Invocations" << RESET << "\n";
 
     // Sorting commands by usage frequency
-    std::vector<std::pair<std::string, int>> sortedData(data.begin(), data.end());
+    std::vector<std::pair<std::string, int>> sortedData(commandData.begin(), commandData.end());
     std::sort(sortedData.begin(), sortedData.end(), [](const auto& a, const auto& b) {
         return b.second < a.second;
     });
 
-	// Determine the most used command
-    int topCall{sortedData[0].second};
-    Str topItem{sortedData[0].first};
+    // Sorting invocations by usage frequency
+    std::vector<std::pair<std::string, int>> sortedInvocationData(invocationData.begin(), invocationData.end());
+    std::sort(sortedInvocationData.begin(), sortedInvocationData.end(), [](const auto& a, const auto& b) {
+        return b.second < a.second;
+    });
 
-    // Display the top 10 commands
-    for (size_t i = 0; i < std::min<size_t>(10, sortedData.size()); ++i) {
-        if (sortedData[i].second > topCall) {
-            topCall = sortedData[i].second;
+	// Determine the most used command
+    int howMuchCallCMD{sortedData[0].second};
+    Str topItem{sortedData[0].first};
+    int commandIndex{1};
+
+    // Determine the most used invocation
+    int howMuchCallInvocation{sortedInvocationData[0].second};
+    Str topInvocation{sortedInvocationData[0].first};
+    int invocationIndex{1};
+
+    // Display the top 5 commands
+    for (size_t i = 0; i < std::min<size_t>(9, sortedData.size()); ++i) {
+        if (sortedData[i].second > howMuchCallCMD) {
+            howMuchCallCMD = sortedData[i].second;
             topItem = sortedData[i].first;
         }
 
+        commandIndex = i+1;
         
-        std::cout << sortedData[i].second << spacer(sortedData[i].second) << "| " << sortedData[i].first << "\n";
-    }
+        std::string commandCout = "   " + std::to_string(commandIndex) + ". " + GREEN + sortedData[i].first + RESET + " (" + std::to_string(sortedData[i].second) + ")";
+        
+        int spaceNeeded = 49 - commandCout.length();
+        std::string space;
+        for (int i = 0; i < spaceNeeded; i++) {
+            space += " ";
+        }
 
-    std::cout << YELLOW << "---------------------------------" << RESET << "\n";
+        std::string invocationCout = std::to_string(commandIndex) + ". " + GREEN + sortedInvocationData[i].first + RESET + " (" + std::to_string(sortedInvocationData[i].second) + ")";
+        std::cout << commandCout << space << invocationCout << "\n";
+    }
+    std::cout << "\n";
 
     // Display motivational comments based on the most used command
     if (topItem == "ls")
@@ -282,6 +312,17 @@ std::map<std::string, int> countCommands(const std::vector<std::string>& command
     return commandCount;
 }
 
+std::map<std::string, int> countInvocations(const std::vector<std::string>& commands) {
+    std::map<std::string, int> commandCount;
+    for (const auto& cmd : commands) {
+        if (!cmd.empty()) {
+            commandCount[cmd]++; // Increment the count for this tool
+        }
+    }
+    return commandCount;
+}
+
+
 // Checks and returns the correct history file based on the shell type
 std::string check_and_return_history_file(const std::string& shell_type) {
     std::string history_file = "";
@@ -373,12 +414,13 @@ int main(int argc, char* argv[]) {
     }
 
     banner();
-    std::cout << GREEN << "Parsing history file: " << historyFile << RESET << "\n\n";
+    //std::cout << GREEN << "Parsing history file: " << historyFile << RESET << "\n\n";
 
-    auto commands = preprocessHistory(historyFile);
-    auto commandCounts = countCommands(commands);
+    std::vector<std::string> commands = preprocessHistory(historyFile);
+    std::map<std::string, int> commandCounts = countCommands(commands);
+    std::map<std::string, int> invocationCounts = countInvocations(commands);
 
-    displayResults("Top Tools", commandCounts);
+    displayResults(commandCounts, invocationCounts);
 
     std::cout << GREEN << "\nTotal Commands Executed: " << commands.size() << RESET << "\n";
 
