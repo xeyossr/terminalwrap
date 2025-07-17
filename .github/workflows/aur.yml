@@ -29,11 +29,6 @@ jobs:
             UserKnownHostsFile=/dev/null
           EOF
 
-      - name: Regenerate .SRCINFO
-        run: |
-          sudo apt-get update && sudo apt-get install -y base-devel
-          makepkg --printsrcinfo > .SRCINFO
-
       - name: Push to AUR
         run: |
           git config --global user.name "github-actions[bot]"
