@@ -1,118 +1,122 @@
 <div align="center">
 
-# Terminal Wrap
-🧑‍💻 Which command do you use the most in the terminal? Let's find out the fun way! 
+# TerminalWrap
+🧑‍💻 Which command do you use the most in the terminal? Let's find out the fun way!
 
 <h3>
-Terminal wrap tool written in <code>👑 C++ 👑</code>
+Terminal usage analytics tool written in <code>Go</code>
 </h3>
 <br>
 
-![preview](assets/preview.png)
+![preview](.github/assets/image.png)
 
 ![License](https://img.shields.io/github/license/xeyossr/terminalwrap?style=for-the-badge)
-![Commits](https://img.shields.io/github/commit-activity/m/xeyossr/terminalwrap?style=for-the-badge)
 ![GitHub Repo stars](https://img.shields.io/github/stars/xeyossr/terminalwrap?style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/xeyossr/terminalwrap?style=for-the-badge)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/xeyossr/terminalwrap?style=for-the-badge)
-
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/xeyossr/terminalwrap?style=for-the-badge)
 ![AUR version](https://img.shields.io/aur/version/terminalwrap?style=for-the-badge)
 
+<br>
+⭐️ **If you like this project, please consider starring the repo!** ⭐️
+
 </div>
 
-##  💫 Features
-- Supports all popular shells!
-  - bash
-  - zsh
-  - fish
-  - csh
-
-- Shows you motivational messages according to the command you use most. Show me your most used command and I'll tell you who you are 😀
-- Yo, what more are you waiting for? lol
-
-## 💻 Installing
 ---
-### Installation 
 
-There are 2 ways to install **TerminalWrap**:
-1. Compile it on your own system (don't worry, this is much easier than you think)
-2. Download the compiled version (not recommended)
+## 💫 Features
 
-If you don't want to compile it, all you need to do is install TerminalWrap from the [releases](https://github.com/xeyossr/terminalwrap/releases) page and then add it to PATH.
-But if you want to compile it (recommended method) follow the steps below:
+- **Supports all popular shells:**
+  - Bash
+  - Zsh
+  - Fish
 
-#### Compile yourself
+- **Lists your most used terminal tools and commands**
+- **Colorful and emoji-rich output**
+- **Motivational and fun summaries**
+- **Automatic shell detection or manual selection**
 
-1. Clone the repository:
+---
 
-```bash
-$ git clone https://github.com/xeyossr/terminalwrap.git
-$ cd terminalwrap
-```
+## 💻 Installation
 
-2. Dependencies:
+### 1. Arch Linux (AUR)
 
-You are expected to install the dependencies required to build TerminalWrap:
-
-```bash
-# Debian/Ubuntu
-$ sudo apt install g++ libstdc++-dev cmake
-
-# RHEL/CentOs/Fedora
-$ sudo dnf install gcc-c++ libstdc++-devel cmake
-
-# Arch
-$ sudo pacman -S gcc cmake
-```
-
-3. Compile the source code:
+You can easily install TerminalWrap via [AUR](https://aur.archlinux.org/packages/terminalwrap):
 
 ```bash
-$ mkdir build
-$ cd build
-$ cmake ..
-$ cmake --build .
-$ sudo cmake --install .
+yay -S terminalwrap
 ```
 
-4. Now you can run TerminalWrap with a single command!
+### 2. Manual Build (Any Linux)
+
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/xeyossr/terminalwrap.git
+    cd terminalwrap
+    ```
+
+2. **Install Go if you don't have it:**
+    ```bash
+    # Debian/Ubuntu
+    sudo apt install golang
+
+    # Arch
+    sudo pacman -S go
+    ```
+
+3. **Build and install:**
+    ```bash
+    make
+    sudo make install
+    ```
+
+---
+
+## 🚀 Usage
+
 ```bash
-$ terminalwrap
+terminalwrap [OPTIONS]
 ```
 
-### Installation on Arch-based distros
-You can easily install TerminalWrap via [AUR](https://aur.archlinux.org/packages/terminalwrap) for Arch Linux-based systems.
+**Options:**
+- `--bash`  Force using Bash history
+- `--zsh`  Force using Zsh history
+- `--fish`  Force using Fish history
+- `--top N` Show top N tools (default: 10)
+- `--help`  Show help message
 
-1. Install TerminalWrap via `yay`.
+If no shell is specified, TerminalWrap will auto-detect your current shell.
 
-```bash
-$ yay -S terminalwrap
-```
+---
 
-2. Now you can easily run TerminalWrap with a simple command!
-```bash
-$ terminalwrap
-```
+## 🐚 Supported Shells
 
-## Usage
+- Bash
+- Zsh
+- Fish
 
-```bash
-Usage: terminalwrap [OPTION]
+Want to see support for another shell?  
+**Feel free to [contribute](#contributing) and add support for your favorite shell!**
 
-Options:
-  --help, -h       Show this help message.
-  --bash           Force using Bash
-  --zsh            Force using Zsh
-  --fish           Force using Fish
-  --csh            Force using Csh
-  (default)        Detect the shell from the environment.
-```
+---
 
-## License
+## 🤝 Contributing
 
-This project is licensed under the GNU General Public License v3.0. You are free to use, modify, and distribute the software under the terms of this license. For more details, please refer to the [LICENSE](LICENSE) file.
+Contributions, issues and feature requests are welcome!  
+If you'd like to add support for a new shell or improve the project, please open a pull request or issue.
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## Thanks for idea & example 💬
-- [islemci/cliwrap](https://github.com/islemci/cliwrap)
+---
+
+## 📄 License
+
+This project is licensed under the GNU General Public License v3.0.  
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Credits & Inspiration
+
+- Inspired by [islemci/cliwrap](https://github.com/islemci/cliwrap)
+
+---
