@@ -19,7 +19,6 @@ build() {
   go build -o terminalwrap main.go
 }
 
-
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   install -Dm755 terminalwrap "$pkgdir/usr/bin/terminalwrap"
