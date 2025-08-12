@@ -75,6 +75,11 @@ func parseBashHistory(path string) (map[string]int, error) {
 		if line == "" {
 			continue
 		}
+
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
+		
 		history[line]++
 	}
 
@@ -119,13 +124,16 @@ func parseFishHistory(path string) (map[string]int, error) {
 	re := regexp.MustCompile(`^\s*- cmd: (.*)$`)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if !strings.Contains(line, "- cmd:") {
+
+		if line == "" {
 			continue
 		}
-
 		matches := re.FindStringSubmatch(line)
 		if matches != nil {
-			history[matches[1]]++
+			cmd := strings.TrimSpace(matches[1])
+			if cmd != "" {
+				history[cmd]++
+			}
 		} else {
 			continue
 		}
