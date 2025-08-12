@@ -75,6 +75,11 @@ func parseBashHistory(path string) (map[string]int, error) {
 		if line == "" {
 			continue
 		}
+
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
+		
 		history[line]++
 	}
 
