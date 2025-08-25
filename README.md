@@ -10,9 +10,9 @@ Terminal usage analytics tool written in <code>Go</code>
 
 ![preview](.github/assets/image.png)
 
-![License](https://img.shields.io/github/license/xeyossr/terminalwrap?style=for-the-badge)
-![GitHub Repo stars](https://img.shields.io/github/stars/xeyossr/terminalwrap?style=for-the-badge)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/xeyossr/terminalwrap?style=for-the-badge)
+![License](https://img.shields.io/github/license/axrona/terminalwrap?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/axrona/terminalwrap?style=for-the-badge)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/axrona/terminalwrap?style=for-the-badge)
 ![AUR version](https://img.shields.io/aur/version/terminalwrap?style=for-the-badge)
 
 <br>
@@ -50,7 +50,7 @@ yay -S terminalwrap
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/xeyossr/terminalwrap.git
+    git clone https://github.com/axrona/terminalwrap.git
     cd terminalwrap
     ```
 
